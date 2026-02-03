@@ -1,0 +1,20 @@
+model:
+  dino_model: dinov3_vith16plus 
+  desc_layer: 28    #true_layer=desc_layer+1
+  desc_facet: token 
+  use_cls: false       
+  aggre_type: GeM               
+  save_dir: data/jzl/GeoAlign/feats
+
+workers: 4
+
+eval:
+  dataset: U1652_Image_D2S
+  data_path: autodl-tmp/University-Release/train
+  batch_size: 64
+  output: feat
+  pos_eval: false
+  refine: false
+  transform:
+    - ToTensor
+    - normalize

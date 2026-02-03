@@ -161,5 +161,6 @@ Comparison with state-of-the-art methods on **University-1652**:
 
 ## 🙏 Acknowledgements
 
-This work is built upon [DINOv3](https://github.com/facebookresearch/dinov3). We thank the authors for their open-source contribution.
+This work is built upon [DINOv3](https://github.com/facebookresearch/dinov3), [EM-CVGL](https://github.com/Collebt/EM-CVGL). We thank the authors for their open-source contribution.
+
 

@@ -30,17 +30,17 @@ Optimization is guided by **Optimal Transport-driven Curriculum Alignment (OTCA)
 - PyTorch 2.8.0+
 - CUDA 12.0+
 
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/JZLhope/GeoAlign.git](https://github.com/JZLhope/GeoAlign.git)
-   cd GeoAlign
 
+
+1. Clone the repository:
+```bash
+git clone https://github.com/JZLhope/GeoAlign.git
+cd GeoAlign
 ```
 
 2. Install dependencies:
 ```bash
 pip install -r requirements.txt
-
 ```
 
 
@@ -162,3 +162,4 @@ Comparison with state-of-the-art methods on **University-1652**:
 ## 🙏 Acknowledgements
 
 This work is built upon [DINOv3](https://github.com/facebookresearch/dinov3). We thank the authors for their open-source contribution.
+

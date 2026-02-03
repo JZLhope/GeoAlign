@@ -1,46 +1,36 @@
 # GeoAlign: Foundation Model-driven Asymmetric Dual-Stream Manifold Alignment for Unsupervised Cross-View Geo-Localization
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Pytorch](https://img.shields.io/badge/PyTorch-2.8.0-ee4c2c.svg)](https://pytorch.org/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.8.0-EE4C2C.svg)](https://pytorch.org/)
+[![DINOv3](https://img.shields.io/badge/Backbone-DINOv3-blueviolet)](https://github.com/facebookresearch/dinov3)
 
 This repository contains the official inference code for the paper **"GeoAlign: Foundation Model-driven Asymmetric Dual-Stream Manifold Alignment for Unsupervised Cross-View Geo-Localization"**.
 
-**GeoAlign** is a novel unsupervised framework that leverages frozen vision foundation models (DINOv3) to address the severe geometric distortions and lack of annotations in drone-to-satellite matching.
+**GeoAlign** is a novel unsupervised framework that leverages frozen vision foundation models (DINOv3) to address the severe geometric distortions in Drone-to-Satellite matching. It introduces an **Asymmetric Geometry-Rectified Adapter (AGRA)** to rectify drone-view manifolds and an **Intrinsic Structure Mining Stream (ISMS)** to distill discriminative representations via manifold-constrained whitening.
 
-## 📖 Introduction
+> **Note:** We currently release the **inference code and pre-trained weights**. Full training scripts will be available soon.
 
-Cross-view geo-localization (CVGL) faces significant challenges due to platform-specific view discrepancies and the reliance on costly paired annotations. We propose **GeoAlign**, an asymmetric dual-stream framework designed to bridge these gaps without ground-truth supervision.
+---
 
-Our method incorporates four core contributions:
-* **Asymmetric Geometry-Rectified Adapter (AGRA):** Utilizes a Mixture-of-Experts (MoE) exclusively on the drone branch to rectify non-linear geometric distortions towards the standard satellite feature space.
-* **Optimal Transport-driven Curriculum Alignment (OTCA):** Leverages the Sinkhorn algorithm to generate robust soft pseudo-labels, guiding the model from coarse global alignment to fine-grained matching.
-* **Distribution-Aware Mutual Optimization (DAMO):** A hybrid strategy integrating bidirectional soft distillation and reliability-driven complex matching to ensure robust convergence.
-* **Intrinsic Structure Mining Stream (ISMS):** Employs manifold-constrained whitening to eliminate channel redundancy and uncover fine-grained discriminative cues.
+## 🚀 News
+- **[2026-02]**: Inference code and pre-trained models are released. Our method achieves **88.11% R@1** on University-1652 (Drone->Satellite) without any supervision.
 
-## 🚀 Comparison with State-of-the-Arts
+## 🏗️ Framework Overview
 
-GeoAlign establishes a new state-of-the-art for unsupervised CVGL, significantly outperforming existing methods and even rivaling advanced supervised techniques.
+Our framework consists of two parallel streams:
+1.  **Geometry-Rectified Stream (Stream 1):** Utilizes an **Asymmetric Geometry-Rectified Adapter (AGRA)** with a Mixture-of-Experts (MoE) module on the drone branch to rectify non-linear geometric distortions.
+2.  **Intrinsic Structure Mining Stream (Stream 2 - ISMS):** Mines compact intrinsic structures via statistical independence and orthogonality constraints to eliminate channel redundancy.
 
-### University-1652 Benchmark
-
-| Method | Learning | Drone → Satellite (R@1) | Drone → Satellite (AP) |
-| :--- | :---: | :---: | :---: |
-| EM-CVGL (TGRS'24) | Unsup. | 70.29 | 74.93 |
-| Wang et al. (AAAI'25) | Unsup. | 85.95 | 90.33 |
-| **GeoAlign* (Ours)** | **Unsup.** | **88.11** | **92.87** |
-
-### SUES-200 Benchmark (150m Altitude)
-
-| Method | Learning | Drone → Satellite (R@1) | Drone → Satellite (AP) |
-| :--- | :---: | :---: | :---: |
-| EM-CVGL (TGRS'24) | Unsup. | 55.23 | 60.80 |
-| **GeoAlign* (Ours)** | **Unsup.** | **94.23** | **96.78** |
+Optimization is guided by **Optimal Transport-driven Curriculum Alignment (OTCA)** and **Distribution-Aware Mutual Optimization (DAMO)**.
 
 ## 🛠️ Requirements
 
-The code is tested with Python 3.8+ and PyTorch 2.8.0.
+- Linux
+- Python 3.8+
+- PyTorch 2.8.0+
+- CUDA 12.0+
 
-1. Clone this repository:
+1. Clone the repository:
    ```bash
    git clone [https://github.com/JZLhope/GeoAlign.git](https://github.com/JZLhope/GeoAlign.git)
    cd GeoAlign
@@ -54,44 +44,44 @@ pip install -r requirements.txt
 ```
 
 
-*> Note: Please ensure `easydict`, `pyyaml`, and `dinov3` related dependencies are correctly installed.*
+*Dependencies include: `easydict`, `numpy`, `opencv-python`, `transformers`, `torch`, `torchvision`, etc.*
 
-## 📂 Data & Model Weights
+## 📂 Data & Model Zoo
 
-### 1. Download Resources
+### 1. Download Pre-trained Weights
 
-We provide the pre-trained model weights (including the MoE module and ISMS autoencoder) and pre-extracted features via Baidu Netdisk.
+We provide the pre-trained weights for the MoE module (Stream 1) and the ISMS module (Stream 2), along with pre-extracted features for quick evaluation.
 
-* **Link:** [Baidu Netdisk](https://pan.baidu.com/s/1Er16FNa1j4xOphuujqguqg)
-* **Code:** `1688`
+* **Download Link (Baidu Netdisk):** [Click Here](https://pan.baidu.com/s/1Er16FNa1j4xOphuujqguqg)
+* **Extraction Code:** `1688`
 
-### 2. Directory Structure
+### 2. Prepare Directory Structure
 
-To ensure the evaluation scripts run seamlessly, please organize the downloaded files as follows:
+To use the provided scripts directly, we recommend organizing your directory as follows:
 
 ```text
 GeoAlign/
-├── configs/             # Configuration files
+├── configs/             # Configuration files (included in repo)
 ├── data/
-│   └── University-Release/  # U1652 Dataset images (if extracting features)
-├── feats_test/          # Pre-extracted D2S features
-├── feats_test_s2d/      # Pre-extracted S2D features
+│   └── University-Release/  # U1652 Dataset images (if extracting features manually)
+├── feats_test/          # Pre-extracted D2S features (from Netdisk)
+├── feats_test_s2d/      # Pre-extracted S2D features (from Netdisk)
 ├── outputs/
-│   ├── base_stream1/    # Contains '300_param.t' (MoE weights)
-│   └── base_stream2/    # Contains 'isms_model_26_28.pth' (ISMS weights)
-└── ...
+│   ├── base_stream1/    # Place '300_param.t' here
+│   └── base_stream2/    # Place 'isms_model_26_28.pth' here
+├── ...
 
 ```
 
-## ⚡ Inference
+## ⚡ Inference Pipeline
 
-The inference pipeline consists of **Feature Extraction** (optional if using provided features) and **Evaluation**.
+The inference process involves two steps: **Feature Extraction** (optional if using pre-extracted features) and **Evaluation**.
 
-### Step 1: Feature Extraction
+### Step 1: Feature Extraction (DINOv3)
 
-Extract features using the frozen DINOv3 backbone (ViT-H+/16).
+Extract features from the frozen DINOv3 backbone.
 
-**1. Extract Test Features (Drone -> Satellite):**
+**Extract Test Features (Drone -> Satellite):**
 
 ```bash
 python -m extract_and_save configs/base_dinov3_extract_D2S.yml \
@@ -101,7 +91,7 @@ python -m extract_and_save configs/base_dinov3_extract_D2S.yml \
 
 ```
 
-**2. Extract Test Features (Satellite -> Drone):**
+**Extract Test Features (Satellite -> Drone):**
 
 ```bash
 python -m extract_and_save configs/base_dinov3_extract_S2D.yml \
@@ -116,11 +106,11 @@ python -m extract_and_save configs/base_dinov3_extract_S2D.yml \
 
 ### Step 2: Evaluation
 
-Evaluate the retrieval performance. The default setting uses the full **Dual-Stream** architecture (Fusion of Stream 1 & Stream 2).
+Evaluate the retrieval performance. You can choose to evaluate the single stream (Geometry-Rectified only) or the full fused model (GeoAlign*).
 
-#### Drone-to-Satellite (D2S) Evaluation
+#### 1. Drone-to-Satellite (D2S)
 
-**Run GeoAlign* (Full Model with Fusion):**
+**Option A: Full Model (Fusion of Stream 1 + ISMS)** - *Recommended*
 
 ```bash
 python -m evaluate \
@@ -129,16 +119,16 @@ python -m evaluate \
 
 ```
 
-**Run GeoAlign (Stream 1 only / No Fusion):**
+**Option B: Single Stream (Stream 1 only)**
 
 ```bash
 python -m evaluate --no_fusion --gpu 0
 
 ```
 
-#### Satellite-to-Drone (S2D) Evaluation
+#### 2. Satellite-to-Drone (S2D)
 
-**Run GeoAlign* (Full Model with Fusion):**
+**Option A: Full Model**
 
 ```bash
 python -m evaluate \
@@ -148,24 +138,27 @@ python -m evaluate \
 
 ```
 
-## 🎓 Citation
+**Option B: Single Stream**
 
-If you find this work useful for your research, please consider citing our paper:
-
-```bibtex
-@article{Liu2026GeoAlign,
-  title={GeoAlign: Foundation Model-driven Asymmetric Dual-Stream Manifold Alignment for Unsupervised Cross-View Geo-Localization},
-  author={Liu, Juzheng and Qin, Hanlin and Zhang, Xupei and Pang, Zibo and Deng, Chenguang},
-  journal={IEEE Transactions on Circuits and Systems for Video Technology (Submitted)},
-  year={2026}
-}
+```bash
+python -m evaluate --mode S2D --no_fusion --gpu 0
 
 ```
+
+*Note: Ensure the paths in `evaluate.py` (specifically `MOE_WEIGHT_PATH`) point to your local `./outputs/base_stream1/300_param.t` if you moved them.*
+
+## 📊 Main Results
+
+Comparison with state-of-the-art methods on **University-1652**:
+
+| Method | Type | Drone → Satellite (R@1) | Satellite → Drone (R@1) |
+| --- | --- | --- | --- |
+| EM-CVGL (TGRS'24) | Unsupervised | 70.29 | 79.03 |
+| Wang et al. (AAAI'25) | Unsupervised | 85.95 | 94.01 |
+| **GeoAlign (Ours)** | **Unsupervised** | **88.11** | **95.44** |
+
+*Our method significantly outperforms existing unsupervised baselines and rivals advanced supervised methods.*
 
 ## 🙏 Acknowledgements
 
-This work utilizes resources from [DINOv3](https://github.com/facebookresearch/dinov3). We thank the authors for their open-source contribution.
-
-```
-
-```
+This work is built upon [DINOv3](https://github.com/facebookresearch/dinov3). We thank the authors for their open-source contribution.
